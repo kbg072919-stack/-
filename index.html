@@ -18,6 +18,7 @@
   <link rel="preload" as="image" href="bg_page.png">
   <link rel="preload" as="image" href="panel_screen.png">
   <link rel="preload" as="image" href="cat_intro.png">
+  <link rel="preload" as="image" href="question_visual.png">
 
   <title>고양이 타입 테스트</title>
   <style>
@@ -77,6 +78,7 @@
       --img-box-question: url("box_question.png");
       --img-badge-question: url("badge_question.png");
       --img-underline-question: url("underline_question.png");
+      --img-question-visual: url("question_visual.png");
 
       --img-frame-result-image: url("frame_result_image.png");
       --img-card-place: url("card_place.png");
@@ -348,7 +350,7 @@
 
     .question-wrap {
       margin-top: 6px;
-      padding: 24px 20px 22px;
+      padding: 24px 16px 22px;
       border: 0;
       border-radius: 30px;
       background-color: transparent;
@@ -381,44 +383,56 @@
       font-size: 12px;
       font-weight: 900;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
+    }
+
+    .question-hero {
+      position: relative;
+      min-height: 260px;
+      margin: 8px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .question-visual {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .question-scene {
+      position: relative;
+      z-index: 2;
       font-size: 34px;
       line-height: 1.22;
       letter-spacing: -0.05em;
-      margin: 34px 0 34px;
+      margin: 0;
       text-align: center;
       color: var(--text);
-      padding: 0 10px 20px;
-      position: relative;
+      padding: 0 18px;
       font-weight: 900;
     }
 
     .question-scene::after {
-      content: '';
-      display: block;
-      width: 120px;
-      height: 6px;
-      border-radius: 999px;
-      margin: 18px auto 0;
-      background-color: transparent;
-      background-image: var(--img-underline-question);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      display: none;
     }
 
     .answer-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 6px;
+      gap: 12px;
+      margin-top: 8px;
     }
 
     .answer-btn {
-      min-height: 176px;
+      min-height: 228px;
       padding: 0;
       border-radius: 28px;
       text-align: left;
@@ -455,10 +469,10 @@
       position: absolute;
       z-index: 2;
       display: block;
-      width: 62%;
+      width: 58%;
       text-align: center;
-      line-height: 1.35;
-      font-size: 19px;
+      line-height: 1.28;
+      font-size: 18px;
       font-weight: 900;
       letter-spacing: -0.03em;
       color: var(--text);
@@ -470,42 +484,19 @@
 
     .answer-btn[data-choice="A"] .answer-btn__text {
       left: 58%;
-      top: 63%;
+      top: 65%;
       transform: translate(-50%, -50%);
     }
 
     .answer-btn[data-choice="B"] .answer-btn__text {
       left: 42%;
-      top: 63%;
+      top: 65%;
       transform: translate(-50%, -50%);
     }
 
     .answer-btn::before {
-      content: attr(data-choice);
-      position: absolute;
-      top: 38px;
-      width: 44px;
-      height: 44px;
-      border-radius: 18px;
-      border: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--muted);
-      background: transparent;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .answer-btn[data-choice="A"]::before {
-      left: 22px;
-    }
-
-    .answer-btn[data-choice="B"]::before {
-      right: 22px;
-      left: auto;
+      display: none;
+      content: none;
     }
 
     .answer-btn.selected {
@@ -516,7 +507,7 @@
     .controls {
       display: flex;
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 22px;
     }
 
     .controls button {
@@ -735,40 +726,42 @@
     .stack-gap { display: grid; gap: 12px; }
 
     @media (max-width: 420px) {
+      .question-wrap {
+        padding: 24px 14px 22px;
+      }
+
+      .question-hero {
+        min-height: 250px;
+        margin: 6px 0 8px;
+      }
+
       .question-scene {
         font-size: 29px;
+        padding: 0 10px;
+      }
+
+      .answer-list {
+        gap: 8px;
       }
 
       .answer-btn {
-        min-height: 156px;
+        min-height: 204px;
       }
 
       .answer-btn__text {
-        font-size: 17px;
-        width: 68%;
+        font-size: 16px;
+        width: 58%;
+        line-height: 1.26;
       }
 
       .answer-btn[data-choice="A"] .answer-btn__text {
         left: 58%;
-        top: 63%;
+        top: 65%;
       }
 
       .answer-btn[data-choice="B"] .answer-btn__text {
         left: 42%;
-        top: 63%;
-      }
-
-      .answer-btn::before {
-        top: 32px;
-        font-size: 17px;
-      }
-
-      .answer-btn[data-choice="A"]::before {
-        left: 18px;
-      }
-
-      .answer-btn[data-choice="B"]::before {
-        right: 18px;
+        top: 65%;
       }
 
       .hobby-grid {
@@ -870,6 +863,7 @@
       'box_question.png',
       'badge_question.png',
       'underline_question.png',
+      'question_visual.png',
       'frame_result_image.png',
       'card_place.png',
       'thumb_place.png',
@@ -1609,7 +1603,10 @@
 
       questionContainer.innerHTML = `
         <div class="question-kicker">Q ${currentIndex + 1}</div>
-        <div class="question-scene">${escapeHtml(q.scene)}</div>
+        <div class="question-hero">
+          <img class="question-visual" src="question_visual.png" alt="" aria-hidden="true">
+          <div class="question-scene">${escapeHtml(q.scene)}</div>
+        </div>
         <div class="answer-list">
           ${q.options.map((option, index) => {
             const choice = index === 0 ? 'A' : 'B';
