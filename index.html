@@ -419,7 +419,7 @@
 
     .answer-btn {
       min-height: 176px;
-      padding: 22px 22px;
+      padding: 0;
       border-radius: 28px;
       text-align: left;
       font-size: 20px;
@@ -427,41 +427,63 @@
       letter-spacing: -0.03em;
       background: transparent;
       border-color: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
       position: relative;
       color: var(--text);
       box-shadow: none;
-      overflow: hidden;
+      overflow: visible;
       isolation: isolate;
     }
 
-    .answer-btn__bg {
+    .answer-btn__img {
       position: absolute;
       inset: 0;
-      background-color: transparent;
-      background-image: var(--img-btn-answer);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
       z-index: 0;
       pointer-events: none;
+      transform-origin: center;
+    }
+
+    .answer-btn[data-choice="B"] .answer-btn__img {
+      transform: scaleX(-1);
     }
 
     .answer-btn__text {
-      position: relative;
+      position: absolute;
       z-index: 2;
       display: block;
+      width: 62%;
       text-align: center;
       line-height: 1.35;
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      word-break: keep-all;
+      overflow-wrap: normal;
+      white-space: normal;
+      pointer-events: none;
+    }
+
+    .answer-btn[data-choice="A"] .answer-btn__text {
+      left: 58%;
+      top: 63%;
+      transform: translate(-50%, -50%);
+    }
+
+    .answer-btn[data-choice="B"] .answer-btn__text {
+      left: 42%;
+      top: 63%;
+      transform: translate(-50%, -50%);
     }
 
     .answer-btn::before {
       content: attr(data-choice);
       position: absolute;
-      top: 18px;
-      left: 18px;
+      top: 38px;
       width: 44px;
       height: 44px;
       border-radius: 18px;
@@ -474,20 +496,21 @@
       color: var(--muted);
       background: transparent;
       z-index: 2;
+      pointer-events: none;
+    }
+
+    .answer-btn[data-choice="A"]::before {
+      left: 22px;
+    }
+
+    .answer-btn[data-choice="B"]::before {
+      right: 22px;
+      left: auto;
     }
 
     .answer-btn.selected {
       border-color: transparent;
       box-shadow: none;
-    }
-
-    .answer-btn.selected .answer-btn__bg {
-      background-image: var(--img-btn-answer-selected);
-    }
-
-    .answer-btn[data-choice="B"] .answer-btn__bg {
-      transform: scaleX(-1);
-      transform-origin: center;
     }
 
     .controls {
@@ -718,8 +741,34 @@
 
       .answer-btn {
         min-height: 156px;
-        font-size: 18px;
-        padding: 20px 18px;
+      }
+
+      .answer-btn__text {
+        font-size: 17px;
+        width: 68%;
+      }
+
+      .answer-btn[data-choice="A"] .answer-btn__text {
+        left: 58%;
+        top: 63%;
+      }
+
+      .answer-btn[data-choice="B"] .answer-btn__text {
+        left: 42%;
+        top: 63%;
+      }
+
+      .answer-btn::before {
+        top: 32px;
+        font-size: 17px;
+      }
+
+      .answer-btn[data-choice="A"]::before {
+        left: 18px;
+      }
+
+      .answer-btn[data-choice="B"]::before {
+        right: 18px;
       }
 
       .hobby-grid {
@@ -1562,12 +1611,17 @@
         <div class="question-kicker">Q ${currentIndex + 1}</div>
         <div class="question-scene">${escapeHtml(q.scene)}</div>
         <div class="answer-list">
-          ${q.options.map((option, index) => `
-            <button class="answer-btn ${selected === index ? 'selected' : ''}" data-index="${index}" data-choice="${index === 0 ? 'A' : 'B'}">
-              <span class="answer-btn__bg" aria-hidden="true"></span>
-              <span class="answer-btn__text">${escapeHtml(option.text)}</span>
-            </button>
-          `).join('')}
+          ${q.options.map((option, index) => {
+            const choice = index === 0 ? 'A' : 'B';
+            const imageSrc = selected === index ? 'btn_answer_selected.png' : 'btn_answer.png';
+
+            return `
+              <button class="answer-btn ${selected === index ? 'selected' : ''}" data-index="${index}" data-choice="${choice}">
+                <img class="answer-btn__img" src="${imageSrc}" alt="" aria-hidden="true">
+                <span class="answer-btn__text">${escapeHtml(option.text)}</span>
+              </button>
+            `;
+          }).join('')}
         </div>
       `;
 
