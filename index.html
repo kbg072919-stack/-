@@ -82,7 +82,6 @@
 
       --img-frame-result-image: url("frame_result_image.png");
       --img-card-place: url("card_place.png");
-      --img-thumb-place: url("thumb_place.png");
       --img-badge-area: url("badge_area.png");
     }
 
@@ -243,8 +242,7 @@
     }
 
     .hero-cat img,
-    .result-image img,
-    .activity-thumb img {
+    .result-image img {
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -427,8 +425,8 @@
     .answer-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 8px;
+      gap: 16px;
+      margin-top: 16px;
     }
 
     .answer-btn {
@@ -443,6 +441,7 @@
       border-color: transparent;
       display: block;
       position: relative;
+      top: 4px;
       color: var(--text);
       box-shadow: none;
       overflow: visible;
@@ -644,20 +643,6 @@
       box-shadow: none;
     }
 
-    .activity-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      border-radius: 18px;
-      overflow: hidden;
-      background-color: transparent;
-      background-image: var(--img-thumb-place);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      border: 0;
-      margin-bottom: 12px;
-    }
-
     .activity-name {
       font-size: 20px;
       font-weight: 900;
@@ -741,11 +726,13 @@
       }
 
       .answer-list {
-        gap: 8px;
+        gap: 12px;
+        margin-top: 14px;
       }
 
       .answer-btn {
         min-height: 204px;
+        top: 4px;
       }
 
       .answer-btn__text {
@@ -866,7 +853,6 @@
       'question_visual.png',
       'frame_result_image.png',
       'card_place.png',
-      'thumb_place.png',
       'badge_area.png',
       'cat_intro.png',
       'cat_home.png',
@@ -1697,9 +1683,6 @@
 
         return `
           <div class="activity-card">
-            <div class="activity-thumb">
-              <div class="image-placeholder">서울 고정 추천</div>
-            </div>
             <div class="activity-name">${escapeHtml(item.name)}</div>
             <div class="activity-area">${escapeHtml(item.area)}</div>
             <div class="activity-desc">${escapeHtml(item.description)}</div>
