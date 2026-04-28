@@ -5,6 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>고양이 타입 테스트</title>
   <style>
+    @font-face {
+      font-family: "YoonChildfundKorea";
+      src: url("YoonChildfundkoreaMinGuk.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "YoonChildfundKorea";
+      src: url("YoonChildfundkoreaManSeh.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "YoonChildfundKorea";
+      src: url("YoonChildfundkoreaDaeHan.otf") format("opentype");
+      font-weight: 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
       --bg: #f6f1e8;
       --bg-2: #f3ede3;
@@ -22,42 +46,26 @@
       --point: #ffc193;
       --point-2: #ff8383;
 
-      --shadow: 0 10px 24px rgba(160, 120, 80, 0.08);
-
       --radius-xl: 30px;
       --radius-lg: 24px;
       --radius-md: 18px;
 
-      --img-bg-page: url("assets/bg_page.png");
+      --img-bg-page: url("bg_page.png");
+      --img-panel-screen: url("panel_screen.png");
 
-      --img-panel-intro: url("assets/panel_intro.png");
-      --img-panel-test: url("assets/panel_test.png");
-      --img-panel-result: url("assets/panel_result.png");
-      --img-panel-hobby: url("assets/panel_hobby.png");
-      --img-panel-recommend: url("assets/panel_recommend.png");
+      --img-btn-common: url("btn_common.png");
+      --img-btn-answer: url("btn_answer.png");
+      --img-btn-answer-selected: url("btn_answer_selected.png");
+      --img-btn-hobby: url("btn_hobby.png");
 
-      --img-badge-eyebrow: url("assets/badge_eyebrow.png");
+      --img-box-question: url("box_question.png");
+      --img-badge-question: url("badge_question.png");
+      --img-underline-question: url("underline_question.png");
 
-      --img-btn-primary: url("assets/btn_primary.png");
-      --img-btn-secondary: url("assets/btn_secondary.png");
-      --img-btn-answer: url("assets/btn_answer.png");
-      --img-btn-answer-selected: url("assets/btn_answer_selected.png");
-      --img-btn-hobby: url("assets/btn_hobby.png");
-      --img-btn-hobby-selected: url("assets/btn_hobby_selected.png");
-      --img-btn-place-link: url("assets/btn_place_link.png");
-
-      --img-box-question: url("assets/box_question.png");
-      --img-badge-question: url("assets/badge_question.png");
-      --img-underline-question: url("assets/underline_question.png");
-
-      --img-progress-track: url("assets/progress_track.png");
-      --img-progress-fill: url("assets/progress_fill.png");
-
-      --img-frame-result-image: url("assets/frame_result_image.png");
-      --img-card-place: url("assets/card_place.png");
-      --img-thumb-place: url("assets/thumb_place.png");
-      --img-badge-area: url("assets/badge_area.png");
-      --img-card-status: url("assets/card_status.png");
+      --img-frame-result-image: url("frame_result_image.png");
+      --img-card-place: url("card_place.png");
+      --img-thumb-place: url("thumb_place.png");
+      --img-badge-area: url("badge_area.png");
     }
 
     * { box-sizing: border-box; }
@@ -72,7 +80,7 @@
       background-repeat: no-repeat, no-repeat;
       background-position: center top, center;
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Pretendard", sans-serif;
+      font-family: "YoonChildfundKorea", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
@@ -82,6 +90,7 @@
     h1, h2, h3, p, strong, span, small, li, button, div {
       word-break: keep-all;
       overflow-wrap: anywhere;
+      font-family: inherit;
     }
 
     button {
@@ -93,8 +102,9 @@
       background-color: transparent;
       color: var(--text);
       cursor: pointer;
-      transition: transform .15s ease, filter .15s ease;
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
       box-shadow: none;
+      font-family: inherit;
     }
 
     button:hover {
@@ -110,6 +120,7 @@
 
     .screen {
       background-color: transparent;
+      background-image: var(--img-panel-screen);
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-position: center;
@@ -119,12 +130,6 @@
       padding: 24px 18px 22px;
       min-height: calc(100vh - 32px);
     }
-
-    #intro-screen { background-image: var(--img-panel-intro); }
-    #test-screen { background-image: var(--img-panel-test); }
-    #result-screen { background-image: var(--img-panel-result); }
-    #hobby-screen { background-image: var(--img-panel-hobby); }
-    #recommend-screen { background-image: var(--img-panel-recommend); }
 
     .hidden { display: none !important; }
 
@@ -176,26 +181,6 @@
       background-color: transparent;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 28px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      border: 0;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      background-color: transparent;
-      background-image: var(--img-badge-eyebrow);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      color: var(--muted);
-    }
-
     h1, h2, h3, p { margin: 0; }
 
     h1 {
@@ -203,6 +188,7 @@
       line-height: 1.05;
       letter-spacing: -0.05em;
       color: var(--text);
+      font-weight: 900;
     }
 
     .hero-sub {
@@ -225,17 +211,19 @@
       padding: 14px 18px;
       border-radius: 999px;
       font-size: 17px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.03em;
     }
 
-    .primary {
+    .primary,
+    .controls button,
+    .activity-link {
       background-color: transparent;
-      background-image: var(--img-btn-primary);
+      background-image: var(--img-btn-common);
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-position: center;
-      color: #3a3128;
+      color: var(--text);
       border-color: transparent;
       box-shadow: none;
     }
@@ -249,7 +237,7 @@
 
     .progress-text {
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--muted);
       min-width: 52px;
       text-align: center;
@@ -259,23 +247,17 @@
       flex: 1;
       height: 14px;
       border-radius: 999px;
-      background-color: transparent;
-      background-image: var(--img-progress-track);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: rgba(255, 255, 255, 0.52);
+      border: 1.5px solid rgba(255, 131, 131, 0.5);
       overflow: hidden;
-      border: none;
+      box-shadow: inset 0 1px 2px rgba(58, 49, 40, 0.08);
     }
 
     .progress-fill {
       height: 100%;
       width: 0%;
-      background-color: transparent;
-      background-image: var(--img-progress-fill);
-      background-size: auto 100%;
-      background-repeat: repeat-x;
-      background-position: left center;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ffc193 0%, #ff8383 100%);
       transition: width 0.25s ease;
     }
 
@@ -312,7 +294,7 @@
       background-repeat: no-repeat;
       background-position: center;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--muted);
       margin-bottom: 14px;
     }
@@ -326,6 +308,7 @@
       color: var(--text);
       padding: 0 10px 20px;
       position: relative;
+      font-weight: 900;
     }
 
     .question-scene::after {
@@ -355,7 +338,7 @@
       border-radius: 28px;
       text-align: left;
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.03em;
       background-color: transparent;
       background-image: var(--img-btn-answer);
@@ -384,7 +367,7 @@
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--muted);
       background: transparent;
     }
@@ -410,18 +393,8 @@
       min-height: 56px;
       border-radius: 22px;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 900;
       padding: 14px 16px;
-      background-color: transparent;
-      background-image: var(--img-btn-secondary);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      box-shadow: none;
-    }
-
-    .controls button.primary {
-      background-image: var(--img-btn-primary);
     }
 
     .controls button:disabled {
@@ -437,6 +410,7 @@
       letter-spacing: -0.04em;
       margin-bottom: 14px;
       color: var(--text);
+      font-weight: 900;
     }
 
     .result-image {
@@ -460,6 +434,7 @@
       letter-spacing: -0.05em;
       margin-bottom: 8px;
       color: var(--text);
+      font-weight: 900;
     }
 
     .result-sub {
@@ -475,6 +450,7 @@
       line-height: 1.75;
       margin-bottom: 20px;
       color: var(--text);
+      font-weight: 400;
     }
 
     .hobby-title,
@@ -484,6 +460,7 @@
       letter-spacing: -0.05em;
       margin-bottom: 10px;
       color: var(--text);
+      font-weight: 900;
     }
 
     .recommend-sub {
@@ -506,7 +483,7 @@
       padding: 10px 8px;
       border-radius: 18px;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.03em;
       text-align: center;
       background-color: transparent;
@@ -522,12 +499,8 @@
     }
 
     .hobby-btn.selected {
-      background-color: transparent;
-      background-image: var(--img-btn-hobby-selected);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-color: transparent;
+      filter: brightness(0.96) saturate(1.08);
+      transform: translateY(1px);
     }
 
     .activity-grid {
@@ -565,7 +538,7 @@
 
     .activity-name {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.03em;
       margin-bottom: 8px;
       color: var(--text);
@@ -602,26 +575,15 @@
       min-height: 50px;
       border-radius: 16px;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 900;
       padding: 12px 14px;
-      background-color: transparent;
-      background-image: var(--img-btn-place-link);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      color: var(--text);
-      box-shadow: none;
     }
 
     .status-card {
-      border: 0;
+      border: 1.5px solid var(--line-soft);
       border-radius: 24px;
       padding: 18px;
-      background-color: transparent;
-      background-image: var(--img-card-status);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: rgba(255, 246, 231, 0.68);
       box-shadow: none;
       font-size: 15px;
       font-weight: 700;
@@ -636,6 +598,7 @@
       line-height: 1.35;
       margin-bottom: 6px;
       letter-spacing: -0.03em;
+      font-weight: 900;
     }
 
     .stack-gap { display: grid; gap: 12px; }
@@ -716,11 +679,11 @@
 
   <script>
     const CAT_IMAGES = {
-      intro: 'assets/cat_intro.png',
-      home: 'assets/cat_home.png',
-      hedgehog: 'assets/cat_hedgehog.png',
-      blurry: 'assets/cat_blurry.png',
-      window: 'assets/cat_window.png'
+      intro: 'cat_intro.png',
+      home: 'cat_home.png',
+      hedgehog: 'cat_hedgehog.png',
+      blurry: 'cat_blurry.png',
+      window: 'cat_window.png'
     };
 
     const TYPES = {
