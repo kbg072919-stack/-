@@ -425,11 +425,7 @@
       font-size: 20px;
       font-weight: 900;
       letter-spacing: -0.03em;
-      background-color: transparent;
-      background-image: var(--img-btn-answer);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: transparent;
       border-color: transparent;
       display: flex;
       align-items: center;
@@ -437,6 +433,28 @@
       position: relative;
       color: var(--text);
       box-shadow: none;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .answer-btn__bg {
+      position: absolute;
+      inset: 0;
+      background-color: transparent;
+      background-image: var(--img-btn-answer);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .answer-btn__text {
+      position: relative;
+      z-index: 2;
+      display: block;
+      text-align: center;
+      line-height: 1.35;
     }
 
     .answer-btn::before {
@@ -455,16 +473,21 @@
       font-weight: 900;
       color: var(--muted);
       background: transparent;
+      z-index: 2;
     }
 
     .answer-btn.selected {
-      background-color: transparent;
-      background-image: var(--img-btn-answer-selected);
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
       border-color: transparent;
       box-shadow: none;
+    }
+
+    .answer-btn.selected .answer-btn__bg {
+      background-image: var(--img-btn-answer-selected);
+    }
+
+    .answer-btn[data-choice="B"] .answer-btn__bg {
+      transform: scaleX(-1);
+      transform-origin: center;
     }
 
     .controls {
@@ -1541,7 +1564,8 @@
         <div class="answer-list">
           ${q.options.map((option, index) => `
             <button class="answer-btn ${selected === index ? 'selected' : ''}" data-index="${index}" data-choice="${index === 0 ? 'A' : 'B'}">
-              ${escapeHtml(option.text)}
+              <span class="answer-btn__bg" aria-hidden="true"></span>
+              <span class="answer-btn__text">${escapeHtml(option.text)}</span>
             </button>
           `).join('')}
         </div>
