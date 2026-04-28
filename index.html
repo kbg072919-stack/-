@@ -3,6 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    (function () {
+      try {
+        if (sessionStorage.getItem('catTestLoaded') === 'true') {
+          document.documentElement.classList.add('skip-loading');
+        }
+      } catch (error) {}
+    })();
+  </script>
+
+  <link rel="preload" as="image" href="loading_paw.png">
+  <link rel="preload" as="image" href="bg_page.png">
+  <link rel="preload" as="image" href="panel_screen.png">
+  <link rel="preload" as="image" href="cat_intro.png">
+
   <title>고양이 타입 테스트</title>
   <style>
     @font-face {
@@ -110,6 +126,74 @@
     button:hover {
       transform: translateY(-1px);
       filter: brightness(1.02);
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f6f1e8;
+      color: #000000;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.32s ease, visibility 0.32s ease;
+    }
+
+    .loading-screen.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .skip-loading .loading-screen {
+      display: none;
+    }
+
+    .loading-inner {
+      width: min(100%, 360px);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .loading-paw {
+      width: 160px;
+      height: 160px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 28px;
+      animation: pawPulse 1.2s ease-in-out infinite;
+    }
+
+    .loading-text {
+      font-size: 20px;
+      line-height: 1.4;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: #000000;
+    }
+
+    @keyframes pawPulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.82;
+      }
+
+      50% {
+        transform: scale(1.045);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 0.82;
+      }
     }
 
     .wrap {
@@ -618,6 +702,15 @@
       .hobby-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+
+      .loading-paw {
+        width: 132px;
+        height: 132px;
+      }
+
+      .loading-text {
+        font-size: 18px;
+      }
     }
 
     @media (min-width: 768px) {
@@ -626,6 +719,13 @@
   </style>
 </head>
 <body>
+  <div class="loading-screen" id="loading-screen" aria-live="polite" aria-label="로딩 중">
+    <div class="loading-inner">
+      <img class="loading-paw" src="loading_paw.png" alt="고양이 발바닥">
+      <div class="loading-text">고양이 깨우는 중...</div>
+    </div>
+  </div>
+
   <div class="wrap">
     <section class="screen hero" id="intro-screen">
       <div class="hero-cat" id="intro-cat"></div>
@@ -686,6 +786,28 @@
       blurry: 'cat_blurry.png',
       window: 'cat_window.png'
     };
+
+    const REQUIRED_IMAGES = [
+      'loading_paw.png',
+      'bg_page.png',
+      'panel_screen.png',
+      'btn_common.png',
+      'btn_answer.png',
+      'btn_answer_selected.png',
+      'btn_hobby.png',
+      'box_question.png',
+      'badge_question.png',
+      'underline_question.png',
+      'frame_result_image.png',
+      'card_place.png',
+      'thumb_place.png',
+      'badge_area.png',
+      'cat_intro.png',
+      'cat_home.png',
+      'cat_hedgehog.png',
+      'cat_blurry.png',
+      'cat_window.png'
+    ];
 
     const TYPES = {
       home: {
@@ -1316,6 +1438,57 @@
     const backToHobbyBtn = document.getElementById('back-to-hobby-btn');
     const restartBtn = document.getElementById('restart-btn');
 
+    function preloadImage(src) {
+      return new Promise((resolve) => {
+        const image = new Image();
+
+        image.onload = () => resolve({ src, ok: true });
+        image.onerror = () => resolve({ src, ok: false });
+        image.src = src;
+      });
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function handleInitialLoading() {
+      const loadingScreen = document.getElementById('loading-screen');
+
+      if (!loadingScreen) return;
+
+      let alreadyLoaded = false;
+
+      try {
+        alreadyLoaded = sessionStorage.getItem('catTestLoaded') === 'true';
+      } catch (error) {
+        alreadyLoaded = false;
+      }
+
+      if (alreadyLoaded) {
+        loadingScreen.classList.add('is-hidden');
+        setTimeout(() => loadingScreen.remove(), 360);
+        return;
+      }
+
+      const preloadWork = Promise.allSettled(REQUIRED_IMAGES.map(preloadImage));
+      const minimumWait = wait(900);
+      const maximumWait = wait(3500);
+
+      await Promise.all([
+        Promise.race([preloadWork, maximumWait]),
+        minimumWait
+      ]);
+
+      loadingScreen.classList.add('is-hidden');
+
+      try {
+        sessionStorage.setItem('catTestLoaded', 'true');
+      } catch (error) {}
+
+      setTimeout(() => loadingScreen.remove(), 360);
+    }
+
     function showScreen(screen) {
       [introScreen, testScreen, resultScreen, hobbyScreen, recommendScreen].forEach(s => s.classList.add('hidden'));
       screen.classList.remove('hidden');
@@ -1470,6 +1643,8 @@
         });
       });
     }
+
+    handleInitialLoading();
 
     renderImage(document.getElementById('intro-cat'), CAT_IMAGES.intro, '고양이 이미지 넣기');
 
