@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>고양이 타입 테스트</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --bg-2: #f3ede3;
+
+      --panel: #ffedce;
+      --panel-tint: #fff6e7;
+
+      --line: #ffc193;
+      --line-soft: rgba(255, 193, 147, 0.42);
+      --line-strong: #ff8383;
+
+      --text: #3a3128;
+      --muted: #8a7660;
+
+      --point: #ffc193;
+      --point-2: #ff8383;
+
+      --shadow: 0 10px 24px rgba(160, 120, 80, 0.08);
+
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Pretendard", sans-serif;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body { min-height: 100vh; }
+
+    h1, h2, h3, p, strong, span, small, li, button, div {
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    button {
+      white-space: normal;
+      line-height: 1.35;
+      min-width: 0;
+      appearance: none;
+      border: 1.5px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+      box-shadow: var(--shadow);
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .wrap {
+      width: min(100%, 440px);
+      margin: 0 auto;
+      padding: 16px 14px 40px;
+    }
+
+    .screen {
+      background: var(--panel);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 24px 18px 22px;
+      min-height: calc(100vh - 32px);
+    }
+
+    .hidden { display: none !important; }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .hero-cat {
+      width: 180px;
+      height: 180px;
+      border: none;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      overflow: visible;
+      margin-bottom: 6px;
+    }
+
+    .hero-cat img,
+    .result-image img,
+    .activity-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .hero-cat img {
+      transform: scale(1.08);
+    }
+
+    .image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      background: var(--panel-tint);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1.5px solid var(--line);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      background: var(--panel-tint);
+      color: var(--muted);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(34px, 10vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      color: var(--text);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .hero-actions {
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    .hero-actions button,
+    .nav-btn,
+    .cta-btn {
+      width: 100%;
+      min-height: 58px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .primary {
+      background: #ff8383;
+      color: #fff8f5;
+      border-color: #ff8383;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      min-width: 52px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 14px;
+      border-radius: 999px;
+      background: #ffe3c8;
+      overflow: hidden;
+      border: none;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #ff8383;
+      transition: width 0.25s ease;
+    }
+
+    .question-wrap {
+      margin-top: 6px;
+      padding: 18px 16px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel-tint);
+      position: relative;
+    }
+
+    .question-wrap::before,
+    .question-wrap::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #ffc193;
+      opacity: .75;
+    }
+
+    .question-wrap::before {
+      top: 112px;
+      left: 18px;
+    }
+
+    .question-wrap::after {
+      top: 138px;
+      right: 22px;
+    }
+
+    .question-kicker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1.5px solid var(--line);
+      background: var(--panel);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .question-scene {
+      font-size: 34px;
+      line-height: 1.22;
+      letter-spacing: -0.05em;
+      margin: 34px 0 34px;
+      text-align: center;
+      color: var(--text);
+      padding: 0 10px 20px;
+      position: relative;
+    }
+
+    .question-scene::after {
+      content: '';
+      display: block;
+      width: 120px;
+      height: 6px;
+      border-radius: 999px;
+      margin: 18px auto 0;
+      background: #ff8383;
+    }
+
+    .answer-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .answer-btn {
+      min-height: 176px;
+      padding: 22px 22px;
+      border-radius: 28px;
+      text-align: left;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: var(--panel);
+      border-color: var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      color: var(--text);
+    }
+
+    .answer-btn::before {
+      content: attr(data-choice);
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 18px;
+      border: 1.5px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--muted);
+      background: var(--panel-tint);
+    }
+
+    .answer-btn.selected {
+      background: #fff3e0;
+      border-color: #ff8383;
+      box-shadow: 0 12px 24px rgba(255, 131, 131, 0.22);
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      flex: 1;
+      min-height: 56px;
+      border-radius: 22px;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 14px 16px;
+    }
+
+    .controls button:disabled {
+      opacity: .42;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .section-title {
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .result-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      border: 1.5px solid var(--line-soft);
+      background: var(--panel-tint);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .result-type {
+      font-size: 34px;
+      line-height: 1.06;
+      letter-spacing: -0.05em;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .result-sub {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ff8383;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .result-body {
+      font-size: 16px;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .hobby-title,
+    .recommend-title {
+      font-size: 30px;
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .hobby-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .hobby-btn {
+      min-height: 72px;
+      padding: 10px 8px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-align: center;
+      background: var(--panel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .hobby-btn.selected {
+      background: #ffc193;
+      border-color: #ff8383;
+    }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .activity-card {
+      border: 1.5px solid var(--line-soft);
+      border-radius: 24px;
+      padding: 12px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .activity-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--panel-tint);
+      border: 1.5px solid var(--line-soft);
+      margin-bottom: 12px;
+    }
+
+    .activity-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .activity-link {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 12px 14px;
+      background: #ffc193;
+      color: var(--text);
+    }
+
+    .stack-gap { display: grid; gap: 12px; }
+
+    @media (max-width: 420px) {
+      .question-scene {
+        font-size: 29px;
+      }
+
+      .answer-btn {
+        min-height: 156px;
+        font-size: 18px;
+        padding: 20px 18px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .wrap { width: min(100%, 560px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="screen hero" id="intro-screen">
+      <div class="eyebrow">cat type test</div>
+      <div class="hero-cat" id="intro-cat"></div>
+      <h1>고양이 타입 테스트</h1>
+      <div class="hero-sub">고양이같은 삶 테스트</div>
+      <div class="hero-actions">
+        <button class="primary" id="start-btn">테스트 시작하기</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" id="test-screen">
+      <div class="progress-wrap">
+        <div class="progress-text" id="progress-label">1 / 16</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+      <div class="question-wrap" id="question-container"></div>
+      <div class="controls">
+        <button id="prev-btn">이전</button>
+        <button class="primary" id="next-btn" disabled>다음</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" id="result-screen">
+      <div class="section-title">테스트 결과</div>
+      <div class="result-image" id="result-image"></div>
+      <div class="result-type" id="result-type"></div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-body" id="result-body"></div>
+      <button class="primary cta-btn" id="to-hobby-btn">내 취미 고르기</button>
+    </section>
+
+    <section class="screen hidden" id="hobby-screen">
+      <div class="hobby-title">요즘 뭐 하고 지내?</div>
+      <div class="hobby-grid" id="hobby-grid"></div>
+      <div class="controls">
+        <button id="back-to-result-btn">결과로 돌아가기</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" id="recommend-screen">
+      <div class="recommend-title" id="recommend-title"></div>
+      <div class="activity-grid" id="activity-grid"></div>
+      <div class="controls">
+        <button id="back-to-hobby-btn">취미 다시 고르기</button>
+        <button class="primary" id="restart-btn">처음부터 다시</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const CAT_IMAGES = {
+      intro: 'cat_intro.png',
+      home: 'cat_home.png',
+      hedgehog: 'cat_hedgehog.png',
+      blurry: 'cat_blurry.png',
+      window: 'cat_window.png'
+    };
+
+    const TYPES = {
+      home: {
+        name: '집이 좋아냥이',
+        short: '혼자 잘 지내서 굳이 다른 사람 생각이 안 나는 고양이',
+        body: '혼자 있는 시간이 너무 잘 맞는다. 굳이 누가 없어도 하루가 꽉 찬 느낌이라, 사람은 선택사항에 가깝다. 누가 들어오기엔 이미 구조가 너무 완성돼 있는 상태.',
+        imageKey: 'home'
+      },
+      hedgehog: {
+        name: '고슴도치 냥이',
+        short: '가까워지기 어렵고 무서워서 일단 관찰하는 고양이',
+        body: '사람이 싫은 건 아닌데, 가까워지기 전에 먼저 거리부터 재게 된다. 괜히 다가갔다가 어색해질까 봐, 일단 보고 있는 시간이 더 길다.',
+        imageKey: 'hedgehog'
+      },
+      blurry: {
+        name: '흐리멍텅 냥이',
+        short: '감정과 생각이 좀 흐리멍텅한 고양이',
+        body: '외로운 건지, 편한 건지, 좋은 건지 그냥 그런 건지 애매하다. 느낌은 있는데 딱 잡히지 않아서, 관계도 항상 애매하게 지나가는 편.',
+        imageKey: 'blurry'
+      },
+      window: {
+        name: '창밖만 보냥이',
+        short: '바깥이 궁금하긴 한데 나가기 귀찮은 고양이',
+        body: '사람도 궁금하고, 바깥도 궁금하다. 근데 막상 움직이긴 귀찮다. 그래서 계속 창밖만 보다가 결국 그대로 하루가 끝난다.',
+        imageKey: 'window'
+      }
+    };
+
+    const QUESTIONS = [
+      {
+        id: 1,
+        scene: '친구가 갑자기 약속 잡자고 한다',
+        options: [
+          { text: '나간다', type: 'window' },
+          { text: '집이 더 좋다', type: 'home' }
+        ]
+      },
+      {
+        id: 2,
+        scene: '집에 혼자 있는 주말',
+        options: [
+          { text: '완벽하다', type: 'home' },
+          { text: '좀 심심하다', type: 'window' }
+        ]
+      },
+      {
+        id: 3,
+        scene: '새로운 사람 만났을 때',
+        options: [
+          { text: '바로 편하다', type: 'window' },
+          { text: '거리 둔다', type: 'hedgehog' }
+        ]
+      },
+      {
+        id: 4,
+        scene: '누가 연락 끊기면',
+        options: [
+          { text: '별 생각 없다', type: 'home' },
+          { text: '신경 쓰인다', type: 'blurry' }
+        ]
+      },
+      {
+        id: 5,
+        scene: '누가 나한테 관심 보이면',
+        options: [
+          { text: '괜찮다', type: 'window' },
+          { text: '살짝 부담된다', type: 'hedgehog' }
+        ]
+      },
+      {
+        id: 6,
+        scene: '카톡 오면',
+        options: [
+          { text: '바로 답한다', type: 'window' },
+          { text: '미루다가 답한다', type: 'home' }
+        ]
+      },
+      {
+        id: 7,
+        scene: '친해지고 싶은 사람 생김',
+        options: [
+          { text: '먼저 다가간다', type: 'window' },
+          { text: '지켜본다', type: 'hedgehog' }
+        ]
+      },
+      {
+        id: 8,
+        scene: '혼자 카페',
+        options: [
+          { text: '너무 좋다', type: 'home' },
+          { text: '살짝 어색하다', type: 'window' }
+        ]
+      },
+      {
+        id: 9,
+        scene: '친구들이 모인다',
+        options: [
+          { text: '굳이 안 가도 된다', type: 'home' },
+          { text: '가볼까 고민한다', type: 'window' }
+        ]
+      },
+      {
+        id: 10,
+        scene: '연락 이어가는 거',
+        options: [
+          { text: '자연스럽다', type: 'window' },
+          { text: '은근 귀찮다', type: 'home' }
+        ]
+      },
+      {
+        id: 11,
+        scene: '누가 나한테 호감 보이면',
+        options: [
+          { text: '괜찮다', type: 'window' },
+          { text: '왜지 싶다', type: 'hedgehog' }
+        ]
+      },
+      {
+        id: 12,
+        scene: '감정 상태',
+        options: [
+          { text: '잘 안 바뀐다', type: 'home' },
+          { text: '자주 헷갈린다', type: 'blurry' }
+        ]
+      },
+      {
+        id: 13,
+        scene: '외로운 날',
+        options: [
+          { text: '그냥 넘긴다', type: 'home' },
+          { text: '이유를 생각한다', type: 'blurry' }
+        ]
+      },
+      {
+        id: 14,
+        scene: '새로운 환경',
+        options: [
+          { text: '금방 적응한다', type: 'window' },
+          { text: '오래 관찰한다', type: 'hedgehog' }
+        ]
+      },
+      {
+        id: 15,
+        scene: '사람 만나는 날',
+        options: [
+          { text: '에너지 쓴다', type: 'home' },
+          { text: '생각보다 괜찮다', type: 'window' }
+        ]
+      },
+      {
+        id: 16,
+        scene: '하루 끝났을 때',
+        options: [
+          { text: '혼자가 편하다', type: 'home' },
+          { text: '누가 생각난다', type: 'blurry' }
+        ]
+      }
+    ];
+
+    const HOBBIES = [
+      '독서', '영화', '드라마', '음악',
+      '게임', '운동', '헬스', '요리',
+      '베이킹', '산책', '카페', '여행',
+      '사진', '그림', '글쓰기', '쇼핑',
+      '패션', '전시', '공연', '클라이밍'
+    ];
+
+    const RECOMMEND_TITLES = ['이거 봤어?', '이런 것도 있대', '이건 어때?', '이런 데도 있네', '이거 한번 볼래?'];
+
+    const RECOMMENDATIONS = {
+      '독서': [
+        { name: 'Thanks Books', image: '', link: '#' },
+        { name: 'Your Mind', image: '', link: '#' },
+        { name: 'ARC N BOOK', image: '', link: '#' }
+      ],
+      '영화': [
+        { name: 'Indie Space', image: '', link: '#' },
+        { name: 'Seoul Art Cinema', image: '', link: '#' },
+        { name: 'Megabox Boutique', image: '', link: '#' }
+      ],
+      '드라마': [
+        { name: 'Seoul Art Cinema', image: '', link: '#' },
+        { name: 'Megabox Boutique', image: '', link: '#' },
+        { name: 'Nodeul Island', image: '', link: '#' }
+      ],
+      '음악': [
+        { name: 'Hyundai Card Music Library', image: '', link: '#' },
+        { name: 'Channel 1969', image: '', link: '#' },
+        { name: 'Strange Fruit', image: '', link: '#' }
+      ],
+      '게임': [
+        { name: 'Board Game Cafe Red Button', image: '', link: '#' },
+        { name: 'Rolling Dice', image: '', link: '#' },
+        { name: 'VR Station', image: '', link: '#' }
+      ],
+      '운동': [
+        { name: 'SpoAny', image: '', link: '#' },
+        { name: 'Anytime Fitness', image: '', link: '#' },
+        { name: 'Hangang Park', image: '', link: '#' }
+      ],
+      '헬스': [
+        { name: 'SpoAny', image: '', link: '#' },
+        { name: 'Anytime Fitness', image: '', link: '#' },
+        { name: 'Climb Lounge', image: '', link: '#' }
+      ],
+      '요리': [
+        { name: 'Cooking Studio Seoul', image: '', link: '#' },
+        { name: 'Oven Studio', image: '', link: '#' },
+        { name: 'Baking Class Seoul', image: '', link: '#' }
+      ],
+      '베이킹': [
+        { name: 'Oven Studio', image: '', link: '#' },
+        { name: 'Baking Class Seoul', image: '', link: '#' },
+        { name: 'Cooking Studio Seoul', image: '', link: '#' }
+      ],
+      '산책': [
+        { name: 'Seoul Forest', image: '', link: '#' },
+        { name: 'Hangang Park', image: '', link: '#' },
+        { name: 'Anthracite Coffee', image: '', link: '#' }
+      ],
+      '카페': [
+        { name: 'Anthracite Coffee', image: '', link: '#' },
+        { name: 'Seoul Forest', image: '', link: '#' },
+        { name: 'Common Ground', image: '', link: '#' }
+      ],
+      '여행': [
+        { name: 'Jeonju Hanok Village', image: '', link: '#' },
+        { name: 'Gangneung Beach', image: '', link: '#' },
+        { name: 'Busan Gamcheon Culture Village', image: '', link: '#' }
+      ],
+      '사진': [
+        { name: 'Ikseon-dong', image: '', link: '#' },
+        { name: 'Seongsu-dong', image: '', link: '#' },
+        { name: 'Dongdaemun Design Plaza', image: '', link: '#' }
+      ],
+      '그림': [
+        { name: 'Greem Studio', image: '', link: '#' },
+        { name: 'Drawing Cafe', image: '', link: '#' },
+        { name: 'Painting Room', image: '', link: '#' }
+      ],
+      '글쓰기': [
+        { name: 'Write Salon', image: '', link: '#' },
+        { name: 'Textbook Writing Space', image: '', link: '#' },
+        { name: 'Seoul Writing Cafe', image: '', link: '#' }
+      ],
+      '쇼핑': [
+        { name: 'Garosu-gil', image: '', link: '#' },
+        { name: 'Hongdae Street', image: '', link: '#' },
+        { name: 'Common Ground', image: '', link: '#' }
+      ],
+      '패션': [
+        { name: 'Garosu-gil', image: '', link: '#' },
+        { name: 'Hongdae Street', image: '', link: '#' },
+        { name: 'Common Ground', image: '', link: '#' }
+      ],
+      '전시': [
+        { name: 'Leeum Samsung Museum of Art', image: '', link: '#' },
+        { name: 'MMCA Seoul', image: '', link: '#' },
+        { name: 'Seoul Museum of Art', image: '', link: '#' }
+      ],
+      '공연': [
+        { name: 'Hongdae Live Club', image: '', link: '#' },
+        { name: 'Blue Square', image: '', link: '#' },
+        { name: 'Nodeul Island', image: '', link: '#' }
+      ],
+      '클라이밍': [
+        { name: 'The Climb', image: '', link: '#' },
+        { name: 'Climb Square', image: '', link: '#' },
+        { name: 'Boulder Friends', image: '', link: '#' }
+      ]
+    };
+
+    let currentIndex = 0;
+    let shuffledQuestions = [];
+    const answers = {};
+    let selectedHobby = null;
+
+    const introScreen = document.getElementById('intro-screen');
+    const testScreen = document.getElementById('test-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const hobbyScreen = document.getElementById('hobby-screen');
+    const recommendScreen = document.getElementById('recommend-screen');
+
+    const startBtn = document.getElementById('start-btn');
+    const questionContainer = document.getElementById('question-container');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+
+    const resultImage = document.getElementById('result-image');
+    const resultType = document.getElementById('result-type');
+    const resultSub = document.getElementById('result-sub');
+    const resultBody = document.getElementById('result-body');
+    const toHobbyBtn = document.getElementById('to-hobby-btn');
+
+    const hobbyGrid = document.getElementById('hobby-grid');
+    const backToResultBtn = document.getElementById('back-to-result-btn');
+
+    const recommendTitle = document.getElementById('recommend-title');
+    const activityGrid = document.getElementById('activity-grid');
+    const backToHobbyBtn = document.getElementById('back-to-hobby-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    function showScreen(screen) {
+      [introScreen, testScreen, resultScreen, hobbyScreen, recommendScreen].forEach(s => s.classList.add('hidden'));
+      screen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderImage(container, src, fallbackText) {
+      if (src) {
+        container.innerHTML = `<img src="${src}" alt="${fallbackText}">`;
+      } else {
+        container.innerHTML = `<div class="image-placeholder">${fallbackText}</div>`;
+      }
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function buildShuffledQuestions() {
+      shuffledQuestions = shuffleArray(QUESTIONS);
+    }
+
+    function renderQuestion() {
+      const q = shuffledQuestions[currentIndex];
+      const selected = answers[q.id] ?? null;
+      questionContainer.innerHTML = `
+        <div class="question-kicker">Q ${currentIndex + 1}</div>
+        <div class="question-scene">${q.scene}</div>
+        <div class="answer-list">
+          ${q.options.map((option, index) => `
+            <button class="answer-btn ${selected === index ? 'selected' : ''}" data-index="${index}" data-choice="${index === 0 ? 'A' : 'B'}">
+              ${option.text}
+            </button>
+          `).join('')}
+        </div>
+      `;
+
+      [...questionContainer.querySelectorAll('.answer-btn')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          answers[q.id] = Number(btn.dataset.index);
+          renderQuestion();
+        });
+      });
+
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = selected === null;
+      progressFill.style.width = `${((currentIndex + 1) / shuffledQuestions.length) * 100}%`;
+      progressLabel.textContent = `${currentIndex + 1} / ${shuffledQuestions.length}`;
+      nextBtn.textContent = currentIndex === shuffledQuestions.length - 1 ? '결과 보기' : '다음';
+    }
+
+    function computeResultType() {
+      const scores = { home: 0, hedgehog: 0, blurry: 0, window: 0 };
+      QUESTIONS.forEach(q => {
+        const pickedIndex = answers[q.id];
+        if (pickedIndex === undefined) return;
+        const picked = q.options[pickedIndex];
+        scores[picked.type] += 1;
+      });
+
+      return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+    }
+
+    function renderResult() {
+      const typeKey = computeResultType();
+      const type = TYPES[typeKey];
+      renderImage(resultImage, CAT_IMAGES[type.imageKey], '고양이 이미지 넣기');
+      resultType.textContent = type.name;
+      resultSub.textContent = type.short;
+      resultBody.textContent = type.body;
+    }
+
+    function renderHobbies() {
+      hobbyGrid.innerHTML = HOBBIES.map(hobby => `
+        <button class="hobby-btn ${selectedHobby === hobby ? 'selected' : ''}" data-hobby="${hobby}">${hobby}</button>
+      `).join('');
+
+      [...hobbyGrid.querySelectorAll('.hobby-btn')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedHobby = btn.dataset.hobby;
+          renderRecommendations();
+          showScreen(recommendScreen);
+        });
+      });
+    }
+
+    function renderRecommendations() {
+      recommendTitle.textContent = RECOMMEND_TITLES[Math.floor(Math.random() * RECOMMEND_TITLES.length)];
+      const items = RECOMMENDATIONS[selectedHobby] || [];
+      activityGrid.innerHTML = items.map(item => `
+        <div class="activity-card">
+          <div class="activity-thumb">${item.image ? `<img src="${item.image}" alt="${item.name}">` : `<div class="image-placeholder">이미지 넣기</div>`}</div>
+          <div class="activity-name">${item.name}</div>
+          <button class="activity-link" data-link="${item.link}">보러가기</button>
+        </div>
+      `).join('');
+
+      [...activityGrid.querySelectorAll('.activity-link')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          const link = btn.dataset.link;
+          if (link && link !== '#') {
+            window.open(link, '_blank', 'noopener,noreferrer');
+          }
+        });
+      });
+    }
+
+    renderImage(document.getElementById('intro-cat'), CAT_IMAGES.intro, '고양이 이미지 넣기');
+
+    startBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      buildShuffledQuestions();
+      showScreen(testScreen);
+      renderQuestion();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const q = shuffledQuestions[currentIndex];
+      if (answers[q.id] === undefined) return;
+      if (currentIndex === shuffledQuestions.length - 1) {
+        renderResult();
+        showScreen(resultScreen);
+        return;
+      }
+      currentIndex += 1;
+      renderQuestion();
+    });
+
+    toHobbyBtn.addEventListener('click', () => {
+      renderHobbies();
+      showScreen(hobbyScreen);
+    });
+
+    backToResultBtn.addEventListener('click', () => showScreen(resultScreen));
+    backToHobbyBtn.addEventListener('click', () => showScreen(hobbyScreen));
+
+    restartBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      selectedHobby = null;
+      shuffledQuestions = [];
+      Object.keys(answers).forEach(key => delete answers[key]);
+      showScreen(introScreen);
+    });
+  </script>
+</body>
+</html>
